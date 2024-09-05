@@ -9,21 +9,22 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class KafkaListeners {
+public class KafkaUserRegistrationListener {
 
   EmailSenderService emailSenderService;
   private final ObjectMapper objectMapper = new ObjectMapper();
 
-  @KafkaListener(topics = "subscription_events", groupId = "subscription-notification-group")
+  @KafkaListener(topics = "registrationNotify", groupId = "notification-group")
   void listener(String data) throws Exception {
     try {
       JsonNode jsonNode = objectMapper.readTree(data);
       String userId = jsonNode.get("userId").asText();
-      String subscriptionId = jsonNode.get("subscriptionId").asText();
       String email = jsonNode.get("email").asText();
 
       System.out.println("Processed subscription for user: " + userId);
-      emailSenderService.sendEmail(email, userId, subscriptionId);
+      String body = "Congratulations you have successfully registered on out newsletter with "
+          + "email : " + email;
+      emailSenderService.sendEmail(email, body);
     } catch (Exception e) {
       System.out.println(e);
       throw new Exception(e);

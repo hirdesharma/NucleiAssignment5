@@ -10,13 +10,11 @@ public class EmailSenderService {
   @Autowired
   private JavaMailSender javaMailSender;
 
-  public void sendEmail(String toEmail, String userId, String subscriptionId) {
+  public void sendEmail(String toEmail, String body) {
     SimpleMailMessage message = new SimpleMailMessage();
     message.setFrom("supernova108123@gmail.com");
     message.setTo(toEmail);
     message.setSubject("Subscription done");
-    String body = "Congratulations you { userId : " + userId + "} have been subscribed to the "
-        + "subscription {subscriptionId : " + "}";
     message.setText(body);
     javaMailSender.send(message);
     System.out.println("chala gaya mail");
